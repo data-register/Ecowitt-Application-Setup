@@ -1,6 +1,8 @@
+# nixpacks.toml
+
 [phases.setup]
 commands = [
-  "apt-get update && apt-get install -y python3 python3-pip gcc libpq-dev",
+  "apt-get update && apt-get install -y python3 python3-pip gcc libpq-dev --fix-missing && apt-get clean",
   "pip install -r requirements.txt",
   "python create_db.py"
 ]
