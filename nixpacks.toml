@@ -4,9 +4,6 @@ commands = [
   "python create_db.py"
 ]
 
-[phases.build]
-commands = []
-
 [phases.start]
 commands = [
   "python api_server.py"
