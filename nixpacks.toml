@@ -1,0 +1,23 @@
+[phases.setup]
+commands = [
+  "pip install -r requirements.txt",
+  "python create_db.py"
+]
+
+[phases.build]
+commands = []
+
+[phases.start]
+commands = [
+  "python api_server.py"
+]
+
+[env]
+POSTGRES_HOST = "localhost"
+POSTGRES_PORT = "5432"
+POSTGRES_DB = "ecowitt"
+POSTGRES_USER = "ecowitt_user"
+POSTGRES_PASSWORD = "ecowitt_password"
+
+[ports]
+app = 5000
