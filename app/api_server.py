@@ -7,11 +7,11 @@ import json
 app = Flask(__name__)
 
 # PostgreSQL connection settings
-POSTGRES_HOST = "localhost"
-POSTGRES_PORT = "5432"
-POSTGRES_DB = "ecowitt"
-POSTGRES_USER = "ecowitt_user"
-POSTGRES_PASSWORD = "ecowitt_password"
+POSTGRES_HOST = os.getenv("POSTGRES_HOST")
+POSTGRES_PORT = os.getenv("POSTGRES_PORT")
+POSTGRES_DB = os.getenv("POSTGRES_DB")
+POSTGRES_USER = os.getenv("POSTGRES_USER")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
 
 # Ecowitt API settings
 API_URL = "https://api.ecowitt.net/api/v3/device/real_time?application_key=61759DF4094EBA1A61E070A285A2DAF7&api_key=fe33f769-d487-433c-a31d-8e504df4076f&mac=48:E7:29:5F:72:44&call_back=all"
@@ -19,15 +19,9 @@ API_URL = "https://api.ecowitt.net/api/v3/device/real_time?application_key=61759
 # Function to store data in PostgreSQL
 def store_data_to_postgres(data):
     try:
-        connection = psycopg2.connect(
-            host=POSTGRES_HOST,
-            port=POSTGRES_PORT,
-            database=POSTGRES_DB,
-            user=POSTGRES_USER,
-            password=POSTGRES_PASSWORD
-        )
+        connection = psycopg2.connect(host=POSTGRES_HOST, port=POSTGRES_PORT, database=POSTGRES_DB, user=POSTGRES_USER, password=POSTGRES_PASSWORD)
         cursor = connection.cursor()
-
+    
         # Insert the data into the table
         cursor.execute(
             "INSERT INTO weather_data (data) VALUES (%s);",
