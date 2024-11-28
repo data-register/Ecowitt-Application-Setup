@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  ecowitt_api:
+    image: python:3.9-slim
+    container_name: ecowitt_api_service
+    volumes:
+      - ./app:/app
+    working_dir: /app
+    command: bash -c "pip install -r requirements.txt && python api_server.py"
+    environment:
+      POSTGRES_HOST: "/var/run/secrets/POSTGRES_HOST"
+      POSTGRES_PORT: "/var/run/secrets/POSTGRES_PORT"
+      POSTGRES_DB: "/var/run/secrets/POSTGRES_DB"
+      POSTGRES_USER: "/var/run/secrets/POSTGRES_USER"
+      POSTGRES_PASSWORD: "/var/run/secrets/POSTGRES_PASSWORD"
+    secrets:
+      - POSTGRES_HOST
+      - POSTGRES_PORT
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    networks:
+      - coolify_network
+    ports:
+      - "5000:5000"
+
+  ecowitt_db:
+    image: postgres:13
+    container_name: ecowitt_db_service
+    volumes:
+      - ecowitt_db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ecowitt
+      POSTGRES_USER: ecowitt_user
+      POSTGRES_PASSWORD: ecowitt_password
+    networks:
+      - coolify_network
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_service
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@ecowitt.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8081:80"
+    networks:
+      - coolify_network
+
+volumes:
+  ecowitt_db_data:
+    driver: local
+
+networks:
+  coolify_network:
+    driver: bridge
+
+secrets:
+  POSTGRES_HOST:
+    external: true
+  POSTGRES_PORT:
+    external: true
+  POSTGRES_DB:
+    external: true
+  POSTGRES_USER:
+    external: true
+  POSTGRES_PASSWORD:
+    external: true
